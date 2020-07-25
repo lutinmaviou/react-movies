@@ -27,7 +27,7 @@ export default class MovieElement extends Component {
                                     <button
                                         className="btn btn-small btn-primary"
                                         onClick={() => {
-                                            this.props.addFavorite(this.props.movie.title)
+                                            this.props.addFavorite(this.props.movie)
                                         }}>Ajouter</button>
                                 )}
                         </div>

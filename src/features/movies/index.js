@@ -1,27 +1,52 @@
 import React from 'react';
 import { MovieList, MovieDetails, SearchBar } from './components';
 import Loading from '../../components/utils/Loading';
+import { connect } from 'react-redux';
+import {
+  moviesIsLoadingSelector,
+  moviesListSelector,
+  favoritesListNameSelector,
+  moviesSelectedMovieSelector
+} from '../../store/selectors';
+import {
+  fetchMovies,
+  setSelectedMovie,
+  tryAddFavorite,
+  tryRemoveFavorite
+} from '../../store/actions';
 
-export default (props) => {
-    return (
-        <>
-            <SearchBar updateMovies={props.updateMovies} />
-            {props.loaded ? (
-                <div className="d-flex flex-row flex-fill pt-4 p-2">
-                    <MovieList
-                        movies={props.movies}
-                        updatedSelectedMovie={props.updatedSelectedMovie}
-                        favorites={props.favorites.map(f => f.title)}
-                        addFavorite={props.addFavorite}
-                        removeFavorite={props.removeFavorite}
-                    />
-                    <MovieDetails
-                        movie={props.movies[props.selectedMovie]}
-                    />
-                </div>
-            ) : (
-                    <Loading />
-                )}
-        </>
-    )
+const Movies = (props) => {
+  return (
+    <>
+      <SearchBar fetchMovies={props.fetchMovies} />
+      {props.isLoading ? (
+        <Loading />
+      ) : (
+          <div className="d-flex flex-row flex-fill pt-4 p-2">
+            <MovieList
+              movies={props.movies}
+              updatedSelectedMovie={props.setSelectedMovie}
+              favorites={props.favoritesListName}
+              addFavorite={props.tryAddFavorite}
+              removeFavorite={props.tryRemoveFavorite}
+            />
+            <MovieDetails
+              movie={props.selectedMovie}
+            />
+          </div>
+        )}
+    </>
+  )
 }
+
+export default connect(state => ({
+  isLoading: moviesIsLoadingSelector(state),
+  movies: moviesListSelector(state),
+  favoritesListName: favoritesListNameSelector(state),
+  selectedMovie: moviesSelectedMovieSelector(state)
+}), {
+  fetchMovies,
+  setSelectedMovie,
+  tryAddFavorite,
+  tryRemoveFavorite
+})(Movies);

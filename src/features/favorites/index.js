@@ -1,20 +1,30 @@
 import React from 'react';
 import { FavoriteList } from './components';
 import Loading from '../../components/utils/Loading';
+import { connect } from 'react-redux';
+import { favoritesListSelector, favoritesIsLoadingSelector } from '../../store/selectors';
+import { tryRemoveFavorite } from '../../store/actions';
 
-export default (props) => {
+const Favorites = (props) => {
     return (
         <div className="d-flex flex-row flex-fill pt-4 p-2">
-            {props.loaded ? (
-                <div className="d-flex flex-row flex-fill pt-4 p-2">
-                    <FavoriteList
-                        favorites={props.favorites}
-                        removeFavorite={props.removeFavorite}
-                    />
-                </div>
+            {props.isLoading ? (
+                <Loading />
             ) : (
-                    <Loading />
+                    <div className="d-flex flex-row flex-fill pt-4 p-2">
+                        <FavoriteList
+                            favorites={props.favorites}
+                            removeFavorite={props.tryRemoveFavorite}
+                        />
+                    </div>
                 )}
         </div>
     )
 }
+
+export default connect(state => ({
+    favorites: favoritesListSelector(state),
+    isLoading: favoritesIsLoadingSelector(state)
+}), {
+    tryRemoveFavorite
+})(Favorites);

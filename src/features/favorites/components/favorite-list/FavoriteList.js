@@ -10,7 +10,7 @@ export default class FavoriteList extends Component {
                     <FavoriteElement
                         key={f.title + index}
                         favorite={f}
-                        removeFavorite={this.props.removeFavorite}
+                        removeFavorite={() => this.props.removeFavorite(f.title)}
                     />
                 ))}
             </div>

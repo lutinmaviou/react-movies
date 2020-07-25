@@ -1,19 +1,10 @@
 import React, { Component } from "react";
 import { Formik } from 'formik';
-import apiMovie, { apiMovieMap } from '../../../../config/api.movie';
 
 export default class SearchBar extends Component {
 
     submit = (values, actions) => {
-        const query = '?' + Object.keys(values).map(k => `${k}=${values[k]}&`).join('');
-        apiMovie.get('/search/movie' + query)
-            .then(response => response.data.results)
-            .then(moviesApi => {
-                const movies = moviesApi.map(apiMovieMap);
-                this.props.updateMovies(movies);
-                actions.setSubmitting(false);
-            })
-            .catch(err => console.log(err));
+        this.props.fetchMovies(values).then(() => actions.setSubmitting(false));
     }
 
     render() {
